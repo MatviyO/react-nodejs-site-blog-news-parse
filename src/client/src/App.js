@@ -1,8 +1,13 @@
 import React from 'react';
+import Post from "./components/Post";
+import posts from './posts.json'
 
 function App() {
   return (
-      <h1>Up</h1>
+      <div>
+          {posts.map()}
+
+      </div>
 
   );
 }
