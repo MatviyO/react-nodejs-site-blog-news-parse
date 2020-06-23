@@ -45,7 +45,6 @@ function groznyinform() {
                 text: text,
                 views: views
             }
-            console.log(post)
         });
 }
 
@@ -57,10 +56,10 @@ function magastimes() {
             const body = response.body;
             const $ = cheerio.load(body)
 
-            const title = $('.entry-title').text();
-            const image = 'http://magastimes.ru' + $('.imgA img').attr('src');
+            const title = $('.td-post-title .entry-title').text();
+            const image = $('figure img').attr('src');
             const text = $('.td-post-content p').text();
-            const views = $('.news p.views').text();
+            const views = $('.td-post-views span').text();
 
             const post = {
                 title: title,
@@ -68,7 +67,28 @@ function magastimes() {
                 text: text,
                 views: views
             }
-            console.log(post)
         });
 }
 
+function parsePost(url, titleClass, imageClass, textClass, viewsClass) {
+    unirest
+        .get(url)
+        .end(function (response) {
+            const body = response.body;
+            const $ = cheerio.load(body)
+
+            const domain = url.match(/\/\/(.*?)\//)[1];
+            const title = $(titleClass).text();
+            let image = $(imageClass).attr('src');
+            image = image.indexOf('http') >= 0 ? image : `http://${domain}${image}`;
+            const text = $(textClass).text().trim();
+            const views = $(viewsClass).text();
+
+            const post = {
+                title: title,
+                image: image,
+                text: text,
+                views: views
+            }
+        });
+}
