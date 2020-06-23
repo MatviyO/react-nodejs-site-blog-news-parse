@@ -7,11 +7,8 @@ function App() {
         <div>
             {posts.map(({title, image, description}, key) => (
                 <Post key={key} title={title} image={image} description={description}/>
-
             ))}
-
         </div>
-
     );
 }
 
