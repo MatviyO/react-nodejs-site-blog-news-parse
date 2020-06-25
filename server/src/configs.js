@@ -19,6 +19,4 @@ const elems = {
     }
 }
 
-module.exports = {
-    elems: elems
-}
+export {elems} ;

@@ -1,11 +1,10 @@
-const unirest = require('unirest')
-const cheerio = require('cheerio')
+import unirest from 'unirest';
+import cheerio from 'cheerio';
 
-function parsePost(url, elems) {
-    unirest
+async function parsePost(url, elems) {
+   await unirest
         .get(url)
-        .end(function (response) {
-            const body = response.body;
+        .end( ({body}) => {
             const $ = cheerio.load(body)
 
             const domain = url.match(/\/\/(.*?)\//)[1];
