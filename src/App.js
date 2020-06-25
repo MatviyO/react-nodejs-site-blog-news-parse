@@ -12,6 +12,7 @@ class App extends Component {
 
     fetchPosts() {
         const {setPosts} = this.props
+        setPosts([])
         axios.get('https://5ef4b0f2ac6d1e00168ca751.mockapi.io/posts').then(({data}) => {
             setPosts(data);
         });
@@ -23,6 +24,13 @@ class App extends Component {
             <div>
                 <div>
                     <button onClick={this.fetchPosts.bind(this)}>click</button>
+                    <h3>REgion: {this.props.regions.region}</h3>
+                    <ul>
+                        <li><button onClick={() => this.props.changeRegion('ING')}>Ing</button></li>
+                        <li><button onClick={() => this.props.changeRegion('CHE')}>Chech</button></li>
+                        <li><button onClick={() => this.props.changeRegion('DAG')}>Dag</button></li>
+
+                    </ul>
                 </div>
                 <div>
                     {!items.length ?
