@@ -2,7 +2,16 @@ import unirest from 'unirest';
 import cheerio from 'cheerio';
 import {elems} from "./configs";
 
-const delay = ms => new Promise(r => setTimeout(r, ms));
+const delay = (i, count, ms) => {
+    return new Promise(resolve => setTimeout(() => {
+        console.log(`
+        Index: ${i};
+        All posts: ${count};
+    `);
+        resolve();
+    }, ms));
+
+};
  function parsePost(url, elems) {
     return  new Promise((resolve, reject) => {
          unirest
@@ -44,29 +53,40 @@ function parseLinks(url, className, maxLinks = 5) {
                 };
             });
             resolve(links);
+            if( !links.length) {
+                reject();
+            };
         });
-        if( !links.length) {
-            reject();
-        };
+
 
     })
 }
-async function fetchLinks(links) {
-    for (let i = 0; i < links.length; i++ ) {
-        const post = await parsePost(
-            links[i],
-            elems.groznyinform
-        ).then(post => post);
-        console.log(post);
-        delay(2000);
-    }
+async function getPosts(links) {
+      let posts = [];
+      let count = links.length;
+
+      for (let i = 0; i < count; i++ ) {
+          const post = await parsePost(
+              links[i],
+              elems.groznyinform
+          ).then(post => post);
+          posts.push(post)
+
+          await delay(i, count, 2000);
+      }
+      return new Promise((resolve, reject) => {
+          if (!posts.length) reject()
+          resolve(posts);
+      })
+
+
 }
 
 
 export {
      parsePost,
     parseLinks,
-    fetchLinks
+    getPosts
 };
 
 
