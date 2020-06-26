@@ -1,5 +1,8 @@
 'use strict';
 
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
 var elems = {
     riadagestan: {
         title: '.itemTitle',
@@ -21,6 +24,4 @@ var elems = {
     }
 };
 
-module.exports = {
-    elems: elems
-};
+exports.elems = elems;

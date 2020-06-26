@@ -1,34 +1,73 @@
 import unirest from 'unirest';
 import cheerio from 'cheerio';
+import {elems} from "./configs";
 
-async function parsePost(url, elems) {
-   await unirest
-        .get(url)
-        .end( ({body}) => {
-            const $ = cheerio.load(body)
+const delay = ms => new Promise(r => setTimeout(r, ms));
+ function parsePost(url, elems) {
+    return  new Promise((resolve, reject) => {
+         unirest
+           .get(url)
+           .end( ({body}) => {
+               const $ = cheerio.load(body)
 
-            const domain = url.match(/\/\/(.*?)\//)[1];
-            const title = $(elems.title).text();
-            let image = $(elems.image).attr('src');
-            console.log(image)
-            image = image.indexOf('http') >= 0 ? image : `http://${domain}${image}`;
-            const text = $(elems.text).text().trim();
-            const views = $(elems.views).text();
+               const domain = url.match(/\/\/(.*?)\//)[1];
+               const title = $(elems.title).text();
+               let image = $(elems.image).attr('src');
+               image = image.indexOf('http') >= 0 ? image : `http://${domain}${image}`;
+               const text = $(elems.text).text().trim();
+               const views = $(elems.views).text();
 
-            const post = {
-                title: title,
-                image: image,
-                text: text,
-                views: views
-            }
-            console.log(post)
-        });
+
+               const post = {
+                   title: title,
+                   image: image,
+                   text: text,
+                   views: views
+               }
+               resolve(post)
+           });
+   });
 }
 
-module.exports = parsePost;
+function parseLinks(url, className, maxLinks = 5) {
+    return new Promise((resolve, reject) => {
+        let links = []
+        unirest.get(url).end(({body,error}) => {
+            if (error) reject(error);
+            const $ = cheerio.load(body);
+            const domain = url.match(/\/\/(.*?)\//)[1];
 
 
+            $(className).each((i, e) => {
+                if (i + 1 <= maxLinks) {
+                    links.push('http://' + domain + $(e).attr('href'));
+                };
+            });
+            resolve(links);
+        });
+        if( !links.length) {
+            reject();
+        };
 
+    })
+}
+async function fetchLinks(links) {
+    for (let i = 0; i < links.length; i++ ) {
+        const post = await parsePost(
+            links[i],
+            elems.groznyinform
+        ).then(post => post);
+        console.log(post);
+        delay(2000);
+    }
+}
+
+
+export {
+     parsePost,
+    parseLinks,
+    fetchLinks
+};
 
 
 
