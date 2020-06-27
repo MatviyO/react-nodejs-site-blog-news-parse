@@ -1,7 +1,9 @@
 import {parsePost, parseLinks, getPosts} from './parsePost';
 import fs from 'fs';
+import iconv from 'iconv-lite';
 
 const saveResult = (json) => {
+    json = iconv.decode(new Buffer(json), 'win1251')
     fs.writeFile('result.json', json, (error) => {
         if (err) {
             console.log(error)
