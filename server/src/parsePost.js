@@ -1,6 +1,5 @@
 import unirest from 'unirest';
 import cheerio from 'cheerio';
-import {elems} from "./configs";
 
 const delay = (i, count, ms) => {
     return new Promise(resolve => setTimeout(() => {
@@ -49,7 +48,7 @@ function parseLinks(url, className, maxLinks = 5) {
 
             $(className).each((i, e) => {
                 if (i + 1 <= maxLinks) {
-                    links.push('http://' + domain + $(e).attr('href'));
+                    links.push('https://' + domain + $(e).attr('href'));
                 };
             });
             resolve(links);
@@ -61,14 +60,14 @@ function parseLinks(url, className, maxLinks = 5) {
 
     })
 }
-async function getPosts(links) {
+async function getPosts(links, elems) {
       let posts = [];
       let count = links.length;
 
       for (let i = 0; i < count; i++ ) {
           const post = await parsePost(
               links[i],
-              elems.groznyinform
+              elems
           ).then(post => post);
           posts.push(post)
 

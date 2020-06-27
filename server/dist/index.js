@@ -1,9 +1,32 @@
 'use strict';
 
+var _stringify = require('babel-runtime/core-js/json/stringify');
+
+var _stringify2 = _interopRequireDefault(_stringify);
+
 var _parsePost = require('./parsePost');
 
-var _configs = require('./configs');
+var _fs = require('fs');
 
-var Post = (0, _parsePost.parsePost)('https://grozny-inform.ru/news/society/120030/', _configs.elems.groznyinform);
+var _fs2 = _interopRequireDefault(_fs);
 
-(0, _parsePost.parseLinks)('http://grozny-inform.ru/news/politic', '.partition_news a');
+var _iconvLite = require('iconv-lite');
+
+var _iconvLite2 = _interopRequireDefault(_iconvLite);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var saveResult = function saveResult(json) {
+    json = _iconvLite2.default.decode(new Buffer(json), 'win1251');
+    _fs2.default.writeFile('result.json', json, function (error) {
+        if (err) {
+            console.log(error);
+        }
+    });
+};
+var urlPage = 'http://grozny-inform.ru/news/politic';
+(0, _parsePost.parseLinks)(urlPage, '.partition_news a').then(function (links) {
+    (0, _parsePost.getPosts)(links).then(function (posts) {
+        return saveResult((0, _stringify2.default)(posts));
+    });
+});

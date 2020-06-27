@@ -3,11 +3,73 @@
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-exports.parseLinks = exports.parsePost = undefined;
+exports.getPosts = exports.parseLinks = exports.parsePost = undefined;
+
+var _regenerator = require('babel-runtime/regenerator');
+
+var _regenerator2 = _interopRequireDefault(_regenerator);
+
+var _asyncToGenerator2 = require('babel-runtime/helpers/asyncToGenerator');
+
+var _asyncToGenerator3 = _interopRequireDefault(_asyncToGenerator2);
 
 var _promise = require('babel-runtime/core-js/promise');
 
 var _promise2 = _interopRequireDefault(_promise);
+
+var getPosts = function () {
+    var _ref3 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee(links) {
+        var posts, count, i, post;
+        return _regenerator2.default.wrap(function _callee$(_context) {
+            while (1) {
+                switch (_context.prev = _context.next) {
+                    case 0:
+                        posts = [];
+                        count = links.length;
+                        i = 0;
+
+                    case 3:
+                        if (!(i < count)) {
+                            _context.next = 13;
+                            break;
+                        }
+
+                        _context.next = 6;
+                        return parsePost(links[i], _configs.elems.groznyinform).then(function (post) {
+                            return post;
+                        });
+
+                    case 6:
+                        post = _context.sent;
+
+                        posts.push(post);
+
+                        _context.next = 10;
+                        return delay(i, count, 2000);
+
+                    case 10:
+                        i++;
+                        _context.next = 3;
+                        break;
+
+                    case 13:
+                        return _context.abrupt('return', new _promise2.default(function (resolve, reject) {
+                            if (!posts.length) reject();
+                            resolve(posts);
+                        }));
+
+                    case 14:
+                    case 'end':
+                        return _context.stop();
+                }
+            }
+        }, _callee, this);
+    }));
+
+    return function getPosts(_x2) {
+        return _ref3.apply(this, arguments);
+    };
+}();
 
 var _unirest = require('unirest');
 
@@ -17,8 +79,18 @@ var _cheerio = require('cheerio');
 
 var _cheerio2 = _interopRequireDefault(_cheerio);
 
+var _configs = require('./configs');
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+var delay = function delay(i, count, ms) {
+    return new _promise2.default(function (resolve) {
+        return setTimeout(function () {
+            console.log('\n        Index: ' + i + ';\n        All posts: ' + count + ';\n    ');
+            resolve();
+        }, ms);
+    });
+};
 function parsePost(url, elems) {
     return new _promise2.default(function (resolve, reject) {
         _unirest2.default.get(url).end(function (_ref) {
@@ -47,24 +119,31 @@ function parsePost(url, elems) {
 function parseLinks(url, className) {
     var maxLinks = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 5;
 
-    _unirest2.default.get(url).end(function (_ref2) {
-        var body = _ref2.body;
-
-        var $ = _cheerio2.default.load(body);
-        var domain = url.match(/\/\/(.*?)\//)[1];
-
+    return new _promise2.default(function (resolve, reject) {
         var links = [];
-        $(className).each(function (i, e) {
-            if (i + 1 <= maxLinks) {
-                links.push('http://' + domain + $(e).attr('href'));
-            }
+        _unirest2.default.get(url).end(function (_ref2) {
+            var body = _ref2.body,
+                error = _ref2.error;
+
+            if (error) reject(error);
+            var $ = _cheerio2.default.load(body);
+            var domain = url.match(/\/\/(.*?)\//)[1];
+
+            $(className).each(function (i, e) {
+                if (i + 1 <= maxLinks) {
+                    links.push('http://' + domain + $(e).attr('href'));
+                };
+            });
+            resolve(links);
+            if (!links.length) {
+                reject();
+            };
         });
-        console.log(links);
     });
 }
-
 exports.parsePost = parsePost;
 exports.parseLinks = parseLinks;
+exports.getPosts = getPosts;
 
 // function riadagestan() {
 //     unirest

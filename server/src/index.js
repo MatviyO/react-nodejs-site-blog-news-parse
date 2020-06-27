@@ -1,20 +1,16 @@
-import {parsePost, parseLinks, getPosts} from './parsePost';
+import { parseLinks, getPosts} from './parsePost';
 import fs from 'fs';
-import iconv from 'iconv-lite';
+ import {elems} from "./configs";
+
 
 const saveResult = (json) => {
-    json = iconv.decode(new Buffer(json), 'win1251')
-    fs.writeFile('result.json', json, (error) => {
-        if (err) {
-            console.log(error)
-        }
-    })
+    fs.writeFile('result.json', json)
 }
-const urlPage = 'http://grozny-inform.ru/news/politic'
+const urlPage = 'http://www.riadagestan.ru/news/politics/'
 parseLinks
-    (urlPage, '.partition_news a')
+    (urlPage, '.b-mid-col__layout li a', 3 )
         .then(links => {
-            getPosts(links).then(posts => saveResult(JSON.stringify(posts)))
+            getPosts(links, elems.riadagestan).then(posts => saveResult(JSON.stringify(posts)))
 
 })
 
