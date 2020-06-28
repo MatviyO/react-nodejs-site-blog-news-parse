@@ -10,23 +10,18 @@ var _fs = require('fs');
 
 var _fs2 = _interopRequireDefault(_fs);
 
-var _iconvLite = require('iconv-lite');
-
-var _iconvLite2 = _interopRequireDefault(_iconvLite);
+var _configs = require('./configs');
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var saveResult = function saveResult(json) {
-    json = _iconvLite2.default.decode(new Buffer(json), 'win1251');
-    _fs2.default.writeFile('result.json', json, function (error) {
-        if (err) {
-            console.log(error);
-        }
+    _fs2.default.writeFile('result.json', json, function (err) {
+        if (err) console.log('no saved');
     });
 };
-var urlPage = 'http://grozny-inform.ru/news/politic';
-(0, _parsePost.parseLinks)(urlPage, '.partition_news a').then(function (links) {
-    (0, _parsePost.getPosts)(links).then(function (posts) {
+var urlPage = 'http://www.riadagestan.ru/news/politics/';
+(0, _parsePost.parseLinks)(urlPage, '.b-mid-col__layout li a', 3).then(function (links) {
+    (0, _parsePost.getPosts)(links, _configs.elems.riadagestan).then(function (posts) {
         return saveResult((0, _stringify2.default)(posts));
     });
 });

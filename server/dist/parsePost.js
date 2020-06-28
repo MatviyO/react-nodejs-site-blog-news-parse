@@ -18,7 +18,7 @@ var _promise = require('babel-runtime/core-js/promise');
 var _promise2 = _interopRequireDefault(_promise);
 
 var getPosts = function () {
-    var _ref3 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee(links) {
+    var _ref3 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee(links, elems) {
         var posts, count, i, post;
         return _regenerator2.default.wrap(function _callee$(_context) {
             while (1) {
@@ -35,7 +35,7 @@ var getPosts = function () {
                         }
 
                         _context.next = 6;
-                        return parsePost(links[i], _configs.elems.groznyinform).then(function (post) {
+                        return parsePost(links[i], elems).then(function (post) {
                             return post;
                         });
 
@@ -66,7 +66,7 @@ var getPosts = function () {
         }, _callee, this);
     }));
 
-    return function getPosts(_x2) {
+    return function getPosts(_x2, _x3) {
         return _ref3.apply(this, arguments);
     };
 }();
@@ -78,8 +78,6 @@ var _unirest2 = _interopRequireDefault(_unirest);
 var _cheerio = require('cheerio');
 
 var _cheerio2 = _interopRequireDefault(_cheerio);
-
-var _configs = require('./configs');
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -131,7 +129,7 @@ function parseLinks(url, className) {
 
             $(className).each(function (i, e) {
                 if (i + 1 <= maxLinks) {
-                    links.push('http://' + domain + $(e).attr('href'));
+                    links.push('https://' + domain + $(e).attr('href'));
                 };
             });
             resolve(links);

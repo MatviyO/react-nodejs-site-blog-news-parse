@@ -4,7 +4,9 @@ import fs from 'fs';
 
 
 const saveResult = (json) => {
-    fs.writeFile('result.json', json)
+    fs.writeFile('result.json', json, err => {
+        if (err) console.log('no saved')
+    })
 }
 const urlPage = 'http://www.riadagestan.ru/news/politics/'
 parseLinks
