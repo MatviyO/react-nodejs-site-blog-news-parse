@@ -10,7 +10,7 @@ const saveResult = (json) => {
 }
 const urlPage = 'http://www.riadagestan.ru/news/politics/'
 parseLinks
-    (urlPage, '.b-mid-col__layout li a', 3 )
+    (urlPage, '.b-mid-col__layout li a', 15 )
         .then(links => {
             getPosts(links, elems.riadagestan).then(posts => saveResult(JSON.stringify(posts)))
 

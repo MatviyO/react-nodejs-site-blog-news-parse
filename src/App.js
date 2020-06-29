@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import Post from "./components/Post";
 import axios from 'axios';
 import {connect} from 'react-redux';
+import {Container, Header, Item, Button, Segment} from 'semantic-ui-react'
 
 class App extends Component {
 
@@ -18,27 +19,43 @@ class App extends Component {
         });
     }
 
+    componentWillMount() {
+        this.fetchPosts();
+    }
+
+    regionText(s) {
+        switch (s) {
+            case 'ING':
+                return 'Ingushetia'
+            case 'DAG':
+                return 'Dagestan'
+            case 'CHE':
+                return 'Chechna'
+
+        }
+    }
+
     render() {
         const {posts: {items}} = this.props
         return (
-            <div>
+            <Container>
+                <Header as='h2'>Region: {this.regionText(this.props.regions.region)}</Header>
                 <div>
-                    <button onClick={this.fetchPosts.bind(this)}>click</button>
-                    <h3>REgion: {this.props.regions.region}</h3>
-                    <ul>
-                        <li><button onClick={() => this.props.changeRegion('ING')}>Ing</button></li>
-                        <li><button onClick={() => this.props.changeRegion('CHE')}>Chech</button></li>
-                        <li><button onClick={() => this.props.changeRegion('DAG')}>Dag</button></li>
+                    <Button.Group basic>>
+                        <Button onClick={() => this.props.changeRegion('ING')}>Ing</Button>
+                        <Button onClick={() => this.props.changeRegion('CHE')}>Chech</Button>
+                        <Button onClick={() => this.props.changeRegion('DAG')}>Dag</Button>
 
-                    </ul>
+                    </Button.Group>
                 </div>
-                <div>
+                <Item.Group divided>
                     {!items.length ?
-                        <span>Loading...</span> : items.map(({title, image, description}, key) => (
-                            <Post key={key} title={title} image={image} description={description}/>
+                        <Segment loading><br/><br/><br/></Segment>  : items.map(({title, image, text, views}, key) => (
+                            <Post key={key} title={title} image={image} text={text} views={views}/>
                         ))}
-                </div>
-            </div>
+                </Item.Group>
+
+            </Container>
         );
     }
 

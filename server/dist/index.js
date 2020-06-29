@@ -20,7 +20,7 @@ var saveResult = function saveResult(json) {
     });
 };
 var urlPage = 'http://www.riadagestan.ru/news/politics/';
-(0, _parsePost.parseLinks)(urlPage, '.b-mid-col__layout li a', 3).then(function (links) {
+(0, _parsePost.parseLinks)(urlPage, '.b-mid-col__layout li a', 15).then(function (links) {
     (0, _parsePost.getPosts)(links, _configs.elems.riadagestan).then(function (posts) {
         return saveResult((0, _stringify2.default)(posts));
     });
