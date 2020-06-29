@@ -36,7 +36,7 @@ class App extends Component {
     }
 
     render() {
-        const {posts: {items}} = this.props
+        const {posts} = this.props
         return (
             <Container>
                 <Header as='h2'>Region: {this.regionText(this.props.regions.region)}</Header>
@@ -49,8 +49,8 @@ class App extends Component {
                     </Button.Group>
                 </div>
                 <Item.Group divided>
-                    {!items.length ?
-                        <Segment loading><br/><br/><br/></Segment>  : items.map(({title, image, text, views}, key) => (
+                    {!posts.length ?
+                        <Segment loading><br/><br/><br/></Segment>  : posts.map(({title, image, text, views}, key) => (
                             <Post key={key} title={title} image={image} text={text} views={views}/>
                         ))}
                 </Item.Group>
@@ -62,9 +62,11 @@ class App extends Component {
 
 }
 
-const mapStateToProps = props => {
+const mapStateToProps = ({posts, regions}) => {
+    const sortedPosts =  posts.items.length ? posts.items.sort((a, b) => a.views - b.views).reverse() : [];
     return {
-        ...props
+        posts: sortedPosts,
+        regions
     }
 }
 const actions = (dispatch) => ({
